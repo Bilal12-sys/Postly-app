@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postly - App</title>
+    <link rel="stylesheet" href="datapost.css">
+</head>
+<body>
+
+    <div class="app" id="app">
+        <header>
+            <h1>Postly</h1>
+            <div class="plus" onclick="openModal()">+</div>
+                <button onclick="window.location.href='index.html'">Home</button>
+            </header>
+          
+        <div class="posts" id="posts"></div>
+    </div>
+
+    <div class="modal" id="uploadModal" style="display:none;">
+        <div class="modal-box">
+            <h3>Create Post</h3>
+            <input type="file" id="image" accept="image/*"  class="inpm">
+            <input type="text" id="title" placeholder="Title">
+            <textarea id="desc" placeholder="Description"></textarea>
+            <button onclick="uploadPost()">Upload</button>
+            <button class="close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

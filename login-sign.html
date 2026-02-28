@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Postly - Login & Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login-sign.css">
+</head>
+<body>
+
+<div class="auth-container" id="authBox">
+    <div class="auth-box" id="login-box">
+        <h2>Postly Login</h2>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-pass" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <span onclick="showSignup()">Sign Up</span></p>
+    </div>
+
+    <div class="auth-box" id="signup-box" style="display:none;">
+        <h2>Postly Sign Up</h2>
+        <input type="text" id="signup-name" placeholder="Full Name">
+        <input type="email" id="signup-email" placeholder="Email">
+        <input type="password" id="signup-pass" placeholder="Password">
+        <button onclick="signup()">Sign Up</button>
+        <p>Already have an account? <span onclick="showLogin()">Login</span></p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
