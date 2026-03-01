@@ -52,31 +52,19 @@ function login() {
         });
     }
 }
-
+// ===== MODAL =====
+const modal = document.getElementById("uploadModal");
+const imageInput = document.getElementById("image");
 
 function openModal() {
-    const modal = document.getElementById("uploadModal");
-    if(modal) modal.style.display = "flex";
-     if(modal) modal.style.overflow = "hidden";
-}
-
-function closeModal() {
-    const modal = document.getElementById("uploadModal");
-    if(modal) modal.style.display = "none";
-}
-// ===== MODAL FUNCTIONS =====
-function openModal() {
-    const modal = document.getElementById("uploadModal");
     modal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // prevent background scroll
+    document.body.style.overflow = "hidden"; // stop background scroll
 }
 
 function closeModal() {
-    const modal = document.getElementById("uploadModal");
     modal.style.display = "none";
-    document.body.style.overflow = "auto"; // restore scroll
-    // Reset form fields
-    document.getElementById("image").value = "";
+    document.body.style.overflow = "auto";
+    imageInput.value = ""; // reset file input
     document.getElementById("title").value = "";
     document.getElementById("desc").value = "";
 }
@@ -85,116 +73,48 @@ function closeModal() {
 function uploadPost() {
     const title = document.getElementById("title").value.trim();
     const desc = document.getElementById("desc").value.trim();
-    const imageInput = document.getElementById("image");
-    const imageFile = imageInput.files[0];
+    const file = imageInput.files[0];
 
-    if (!title || !imageFile) {
-        return Swal.fire({
-            title: "Oops!",
-            text: "Please add a title and select an image.",
-            icon: "warning"
-        });
+    if (!title || !file) {
+        return Swal.fire("Oops!", "Please add a title and select an image.", "warning");
     }
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        let posts = [];
-        try {
-            posts = JSON.parse(localStorage.getItem("posts") || "[]");
-        } catch (err) {
-            posts = [];
-        }
+    // Ensure FileReader runs after user tap (mobile requirement)
+    setTimeout(() => {
+        const reader = new FileReader();
 
-        const newPost = {
-            title: title,
-            desc: desc,
-            image: e.target.result,
-            date: new Date().toLocaleDateString()
-        };
-
-        posts.push(newPost);
-        localStorage.setItem("posts", JSON.stringify(posts));
-
-        closeModal();
-        renderPosts();
-
-        Swal.fire({
-            title: "Success!",
-            text: "Post uploaded successfully.",
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false
-        });
-    };
-
-    reader.onerror = function() {
-        Swal.fire({
-            title: "Error!",
-            text: "Failed to read the image.",
-            icon: "error"
-        });
-    };
-
-    reader.readAsDataURL(imageFile);
-}
-
-// ===== DELETE POST =====
-function deletePost(index) {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-        if (result.isConfirmed) {
+        reader.onload = (e) => {
             let posts = [];
             try {
                 posts = JSON.parse(localStorage.getItem("posts") || "[]");
-            } catch (err) {
-                posts = [];
-            }
+            } catch (err) { posts = []; }
 
-            posts.splice(index, 1);
+            posts.push({
+                title,
+                desc,
+                image: e.target.result,
+                date: new Date().toLocaleDateString()
+            });
+
             localStorage.setItem("posts", JSON.stringify(posts));
+            closeModal();
             renderPosts();
 
             Swal.fire({
-                title: "Deleted!",
-                text: "Your post has been deleted.",
+                title: "Success!",
+                text: "Post uploaded.",
                 icon: "success",
                 timer: 1200,
                 showConfirmButton: false
             });
-        }
-    });
-}
+        };
 
-// ===== DELETE ALL POSTS =====
-function deleteAllPosts() {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "All posts will be deleted!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete all!"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            localStorage.setItem("posts", "[]");
-            renderPosts();
-            Swal.fire({
-                title: "Deleted!",
-                text: "All posts have been deleted.",
-                icon: "success",
-                timer: 1200,
-                showConfirmButton: false
-            });
-        }
-    });
+        reader.onerror = () => {
+            Swal.fire("Error!", "Failed to read image.", "error");
+        };
+
+        reader.readAsDataURL(file);
+    }, 50); // small delay ensures mobile input works
 }
 
 // ===== RENDER POSTS =====
@@ -205,38 +125,72 @@ function renderPosts() {
     let posts = [];
     try {
         posts = JSON.parse(localStorage.getItem("posts") || "[]");
-    } catch (err) {
-        posts = [];
-    }
+    } catch (err) { posts = []; }
 
     if (posts.length === 0) {
-        postContainer.innerHTML = `
-            <p style="text-align:center; padding:20px; color:#555;">
-                No posts yet. Click the <strong>+</strong> button to create one!
-            </p>
-        `;
+        postContainer.innerHTML = `<p style="text-align:center; padding:20px;">No posts yet. Tap + to add one!</p>`;
         return;
     }
 
     postContainer.innerHTML = posts
-        .map((post, index) => `
+        .map((p, i) => `
         <div class="post-card">
-            <img src="${post.image}" alt="post">
+            <img src="${p.image}" alt="post">
             <div class="post-info">
-                <h4>${post.title}</h4>
-                <p>${post.desc}</p>
+                <h4>${p.title}</h4>
+                <p>${p.desc}</p>
                 <div class="card-footer">
-                    <small>${post.date}</small>
-                    <button class="delete-btn" onclick="deletePost(${index})">Delete</button>
+                    <small>${p.date}</small>
+                    <button class="delete-btn" onclick="deletePost(${i})">Delete</button>
                 </div>
             </div>
         </div>
-    `)
-        .reverse()
-        .join('');
+    `).reverse().join('');
 }
 
-// ===== INITIAL RENDER =====
-document.addEventListener("DOMContentLoaded", () => {
-    renderPosts();
-});
+// ===== DELETE POST =====
+function deletePost(index) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "This cannot be undone!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!"
+    }).then(result => {
+        if (result.isConfirmed) {
+            let posts = [];
+            try { posts = JSON.parse(localStorage.getItem("posts") || "[]"); } 
+            catch (err) { posts = []; }
+
+            posts.splice(index, 1);
+            localStorage.setItem("posts", JSON.stringify(posts));
+            renderPosts();
+
+            Swal.fire({title:"Deleted!", text:"Your post was deleted.", icon:"success", timer:1200, showConfirmButton:false});
+        }
+    });
+}
+
+// ===== DELETE ALL =====
+function deleteAllPosts() {
+    Swal.fire({
+        title: "Delete all posts?",
+        text: "Cannot undo!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes!"
+    }).then(result => {
+        if (result.isConfirmed) {
+            localStorage.setItem("posts", "[]");
+            renderPosts();
+            Swal.fire({title:"Deleted!", text:"All posts deleted.", icon:"success", timer:1200, showConfirmButton:false});
+        }
+    });
+}
+
+// ===== INIT =====
+document.addEventListener("DOMContentLoaded", renderPosts);
