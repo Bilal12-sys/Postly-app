@@ -17,7 +17,11 @@ function signup() {
 
     localStorage.setItem("name", name);
     localStorage.setItem("password", pass);
-    alert("Account created! Now you can log in.");
+    Swal.fire({
+  title: "Signup Successful!",
+  text: "You can now log in.",
+  icon: "success"
+});
     showLogin();
 }
 
@@ -28,13 +32,24 @@ function login() {
     
     let lcName = localStorage.getItem("name");
     let lcPass = localStorage.getItem("password");
-
-    if(nameInput === lcName && passInput === lcPass) {
-        alert("Login successful!");
     
-        window.location.href = "datapost.html";
+    if (nameInput === lcName && passInput === lcPass) {
+       Swal.fire({
+  position: "top-end",
+  icon: "success",
+  title: "Your work has been saved",
+  showConfirmButton: false,
+  timer: 1200,
+});
+        setTimeout(() => {
+            window.location.href = "datapost.html";
+        }, 1290);
     } else {
-        alert("User not found or wrong password. Please sign up.");
+        Swal.fire({
+            icon: "error",
+            title: "Oops. User not found!",
+            text: "Please Sign in."
+        });
     }
 }
 
@@ -42,6 +57,7 @@ function login() {
 function openModal() {
     const modal = document.getElementById("uploadModal");
     if(modal) modal.style.display = "flex";
+     if(modal) modal.style.overflow = "hidden";
 }
 
 function closeModal() {
@@ -77,18 +93,27 @@ function uploadPost() {
 
 
 function deletePost(index) {
-    if (confirm("Are you sure you want to delete this post?")) {
-        
-        let posts = JSON.parse(localStorage.getItem("posts") || "[]");
-        
-        
-        posts.splice(index, 1);
-    
-        localStorage.setItem("posts", JSON.stringify(posts));
-        
-        
-        renderPosts();
-    }
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let posts = JSON.parse(localStorage.getItem("posts") || "[]");
+            posts.splice(index, 1);
+            localStorage.setItem("posts", JSON.stringify(posts));
+            renderPosts();
+            Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success"
+            });
+        }
+    });
 }
 function renderPosts() {
     const postContainer = document.getElementById("posts");
