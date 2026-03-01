@@ -9,14 +9,27 @@
 <body>
 
     <div class="app" id="app">
-        <header>
-            <h1>Postly</h1>
-            <div class="plus" onclick="openModal()">+</div>
-                <button onclick="window.location.href='index.html'">Home</button>
-            </header>
-          
-        <div class="posts" id="posts"></div>
-    </div>
+        
+<header class="main-header">
+
+  <!-- Logo -->
+  <h1 class="logo">Postly</h1>
+
+  
+  <div class="cutout-wrapper">
+    <div class="cutout"></div>
+    <div class="plus-btn" onclick="openModal()">+</div>
+  </div>
+
+  <!-- Home Button -->
+  <button class="home-btn" onclick="window.location.href='index.html'">
+    Home
+  </button>
+
+</header>
+
+<!-- Posts Container -->
+<div class="posts" id="posts"></div>
 
     <div class="modal" id="uploadModal" style="display:none;">
         <div class="modal-box">
@@ -31,4 +44,5 @@
 
     <script src="script.js"></script>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>
