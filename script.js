@@ -8,7 +8,6 @@ function showLogin() {
     document.getElementById("login-box").style.display = "flex";
 }
 
-
 function signup() {
     let name = document.getElementById("signup-name").value.trim();
     let pass = document.getElementById("signup-pass").value.trim();
@@ -52,24 +51,24 @@ function login() {
         });
     }
 }
-// ===== MODAL =====
+
 const modal = document.getElementById("uploadModal");
 const imageInput = document.getElementById("image");
 
 function openModal() {
     modal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // stop background scroll
+    document.body.style.overflow = "hidden"; 
 }
 
 function closeModal() {
     modal.style.display = "none";
     document.body.style.overflow = "auto";
-    imageInput.value = ""; // reset file input
+    imageInput.value = ""; 
     document.getElementById("title").value = "";
     document.getElementById("desc").value = "";
 }
 
-// ===== UPLOAD POST =====
+
 function uploadPost() {
     const title = document.getElementById("title").value.trim();
     const desc = document.getElementById("desc").value.trim();
@@ -79,7 +78,7 @@ function uploadPost() {
         return Swal.fire("Oops!", "Please add a title and select an image.", "warning");
     }
 
-    // Ensure FileReader runs after user tap (mobile requirement)
+    
     setTimeout(() => {
         const reader = new FileReader();
 
@@ -140,9 +139,11 @@ function renderPosts() {
                 <h4>${p.title}</h4>
                 <p>${p.desc}</p>
                 <div class="card-footer">
+                <span class="bn"> ${localStorage.getItem("name") || "Unknown"}</span>
                     <small>${p.date}</small>
-                    <button class="delete-btn" onclick="deletePost(${i})">Delete</button>
+                    
                 </div>
+                <button class="delete-btn" onclick="deletePost(${i})">Delete</button>
             </div>
         </div>
     `).reverse().join('');
