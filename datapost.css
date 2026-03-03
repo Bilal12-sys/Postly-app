@@ -6,9 +6,10 @@
 }
 body {
     background: rgba(247, 240, 240, 0.775);
-    backdrop-filter: blur(100px);
+   
     color: #111;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 
@@ -138,7 +139,7 @@ body {
   width: 80px;
   height: 60px;
   background: rgba(247, 240, 240, 0.775);
-    backdrop-filter: blur(10px);
+    
   border-top-left-radius: 60px;
   border-top-right-radius: 60px;
   top: 0;
@@ -172,7 +173,32 @@ body {
   padding: 40px 20px;
 }
 
-/* ===== MODAL BACKGROUND ===== */
+.delete-all-btn {
+    background-color: #ee2929bc;
+    color: white;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    font-size: 20px;
+    border: none;
+    padding: 15px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    box-shadow: 1px 3px 8px #111;
+    cursor: pointer;
+    z-index: 999;
+    font-weight: bold;
+    transition: 0.3s;
+    margin-bottom: 20px;
+}
+
+.delete-all-btn:hover {
+    background-color: #cc0000;
+    transform: scale(1.1);
+}
+
+
 .modal {
     position: fixed;               
     inset: 0;                       

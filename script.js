@@ -182,7 +182,7 @@ function deleteAllPosts() {
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        cancelButtonColor: "#d33",  
         confirmButtonText: "Yes!"
     }).then(result => {
         if (result.isConfirmed) {
@@ -192,6 +192,7 @@ function deleteAllPosts() {
         }
     });
 }
+
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", renderPosts);
